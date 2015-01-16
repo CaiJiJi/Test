@@ -7,9 +7,9 @@ import sys
 import argparse
 import threading
 
-headers = {"Content-Type":"application/x-www-form-urlencoded",    
-           "Connection":"Keep-Alive",
-           "Referer":"http://www.baidu.com/"};
+#headers = {"Content-Type":"application/x-www-form-urlencoded",    
+#           "Connection":"Keep-Alive",
+#           "Referer":"http://www.baidu.com/"};
 
 def BurpShell(host, password):
     global headers
@@ -22,7 +22,7 @@ def BurpShell(host, password):
     #print result
     if result != -1 : #如果返回数据是OK
         print '----- find password:', password
-        exit()
+        sys.exit()
     return
 def usage():
     print """Example: 
@@ -40,10 +40,10 @@ if __name__ == '__main__':
         tsk=[] #创建进程池
         with open(r'pass.txt', 'r') as fPass:
             for password in fPass.readlines():
-                print "Try Password: %s" % (password)
+                password = password.strip()
                 #print 'xxxxxxx %s >> %s >> %s' % (host, shell, password)
                 t= threading.Thread(target = BurpShell, args=(host, password))
-                t.daemon = False # 设置不进行进程守护
+                t.daemon = True # 设置进行进程守护 可自行修改
                 tsk.append(t) # t.start()
             fPass.seek(0)
 
@@ -52,4 +52,4 @@ if __name__ == '__main__':
             t.join(1)  #不阻塞线程 ,1s
 
         print "All thread OK,maybe not "
-        exit()
+        sys.exit()
